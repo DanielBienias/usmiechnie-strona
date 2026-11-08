@@ -7,7 +7,8 @@
     "build": "vite build",
     "preview": "vite preview --host --port 3000",
     "start": "vite preview --host --port 3000",
-    "lint": "vite build --mode development"
+    "lint": "vite build --mode development",
+    "deploy": "rm -rf dist && vite build --base ./ && sed -i '' 's#\"/img/#\"img/#g' dist/assets/*.js && touch dist/.nojekyll && cd dist && git init -q -b gh-pages && git add -A && git commit -q -m Deploy && git push -f https://github.com/DanielBienias/usmiechnie-strona.git gh-pages && cd .. && rm -rf dist/.git"
   },
   "dependencies": {
     "react": "^18.3.1",

@@ -23,3 +23,12 @@ Przeniesiona z Google AI Studio (projekt „luminous-dent-mobile”).
 - Zespół: prawdziwe imiona, biogramy i zdjęcia (`constants.ts` → TEAM, `public/img/zespol-*.jpg`)
 - Formularz rezerwacji jest tylko wizualny (nie wysyła danych) — do podpięcia np. Formspree lub e-mail
 - Czat AI (`components/views/AIChatView.tsx`) jest nieużywany; wymagałby klucza Gemini w `.env.local`
+
+## Publikacja (GitHub Pages)
+Publiczny adres: https://danielbienias.github.io/usmiechnie-strona/
+
+Po zmianach, żeby odświeżyć stronę u klienta:
+```bash
+npm run deploy
+```
+(buduje projekt i wypycha folder `dist` na gałąź `gh-pages`).

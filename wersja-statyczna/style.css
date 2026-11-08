@@ -1,0 +1,240 @@
+/* ============================================================
+   Uśmiechnie Stomatologia — strona mobilna (mobile-first)
+   ============================================================ */
+
+:root {
+  --bg: #f7f3ef;
+  --card: #ffffff;
+  --text: #2f2a25;
+  --muted: #7a6f64;
+  --line: #e8e1d9;
+  --accent: #a28a6a;
+  --accent-dark: #897255;
+  --accent-soft: #f1ebe3;
+  --radius: 16px;
+  --shadow: 0 2px 10px rgba(60, 40, 20, 0.07);
+  --tabbar-h: 64px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  padding-bottom: calc(var(--tabbar-h) + var(--safe-b));
+}
+
+a { color: var(--accent); }
+img { max-width: 100%; display: block; }
+
+/* ---------- Pasek górny ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  padding-top: calc(12px + env(safe-area-inset-top, 0px));
+  display: flex; align-items: center; justify-content: space-between;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: var(--text);
+}
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--accent); color: #fff;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: 1.1rem;
+}
+.brand-name { font-weight: 700; font-size: 1.05rem; line-height: 1.1; }
+.brand-sub { font-size: 0.72rem; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+.call-btn {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-dark);
+  display: grid; place-items: center; text-decoration: none;
+}
+.call-btn svg { width: 20px; height: 20px; }
+
+/* ---------- Układ ---------- */
+.container { padding: 16px; max-width: 640px; margin: 0 auto; }
+.section { margin-bottom: 20px; }
+.card {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 18px;
+}
+h1 { font-size: 1.7rem; line-height: 1.15; margin: 0 0 8px; }
+h2 { font-size: 1.25rem; margin: 0 0 10px; color: var(--accent-dark); }
+h3 { font-size: 1rem; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); font-size: 0.92rem; }
+.text-center { text-align: center; }
+
+/* ---------- Hero ---------- */
+.hero {
+  background: linear-gradient(160deg, #fffdfa 0%, var(--accent-soft) 100%);
+  border-radius: 20px; padding: 26px 20px; margin-bottom: 20px;
+  border: 1px solid var(--line);
+}
+.hero .eyebrow {
+  display: inline-block; font-size: .72rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent-dark);
+  background: #fff; border-radius: 999px; padding: 4px 10px; margin-bottom: 12px;
+}
+.hero p { color: var(--muted); }
+
+/* ---------- Przyciski ---------- */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 52px; padding: 12px 18px;
+  border-radius: 14px; font-weight: 600; font-size: 1rem;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform .15s ease, background .2s ease;
+}
+.btn:active { transform: scale(.98); }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: var(--accent-dark); }
+.btn-secondary { background: #fff; color: var(--accent-dark); border: 1.5px solid var(--accent); }
+.btn-row { display: grid; gap: 10px; margin-top: 14px; }
+
+/* ---------- Kafelki szybkiego dostępu ---------- */
+.tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.tile {
+  background: var(--card); border-radius: var(--radius); padding: 16px 14px;
+  box-shadow: var(--shadow); text-decoration: none; color: var(--text);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tile .ico {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--accent-soft); color: var(--accent-dark);
+  display: grid; place-items: center;
+}
+.tile .ico svg { width: 22px; height: 22px; }
+.tile strong { font-size: .98rem; }
+.tile span { font-size: .8rem; color: var(--muted); }
+
+/* ---------- Lista cech ---------- */
+.features { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.features li { display: flex; gap: 10px; align-items: flex-start; }
+.features li::before {
+  content: ""; flex: none; width: 8px; height: 8px; margin-top: 8px;
+  border-radius: 50%; background: var(--accent);
+}
+
+/* ---------- Zespół ---------- */
+.person {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; margin-bottom: 12px;
+}
+.avatar {
+  flex: none; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-dark);
+  display: grid; place-items: center; font-weight: 700; font-size: 1.1rem;
+}
+.person .role { color: var(--accent-dark); font-size: .88rem; font-style: italic; margin-bottom: 6px; }
+.person p { font-size: .92rem; color: var(--muted); margin: 0; }
+
+/* ---------- Cennik ---------- */
+.search {
+  position: sticky; top: calc(64px + env(safe-area-inset-top, 0px)); z-index: 40;
+  background: var(--bg); padding: 8px 0 12px;
+}
+.search input {
+  width: 100%; min-height: 48px; padding: 12px 14px 12px 42px;
+  border-radius: 14px; border: 1px solid var(--line); background: #fff;
+  font-size: 1rem; color: var(--text);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23a28a6a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>");
+  background-repeat: no-repeat; background-position: 14px center;
+}
+.search input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.notice {
+  background: var(--accent-soft); border-radius: 12px; padding: 12px 14px;
+  font-size: .85rem; color: var(--muted); margin-bottom: 12px;
+}
+details.group {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 10px; overflow: hidden;
+}
+details.group summary {
+  list-style: none; cursor: pointer; padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-weight: 600; font-size: 1rem;
+}
+details.group summary::-webkit-details-marker { display: none; }
+details.group summary .count { font-size: .78rem; color: var(--muted); font-weight: 500; margin-left: auto; margin-right: 10px; }
+details.group summary::after {
+  content: ""; width: 10px; height: 10px; flex: none;
+  border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent);
+  transform: rotate(45deg); transition: transform .2s;
+}
+details.group[open] summary::after { transform: rotate(-135deg); }
+.price-table { width: 100%; border-collapse: collapse; }
+.price-table td { padding: 12px 18px; border-top: 1px solid var(--line); vertical-align: top; font-size: .92rem; }
+.price-table td:last-child { text-align: right; white-space: nowrap; font-weight: 600; color: var(--accent-dark); }
+.price-table tr.hidden { display: none; }
+details.group.hidden { display: none; }
+.no-results { display: none; text-align: center; color: var(--muted); padding: 24px 0; }
+.no-results.show { display: block; }
+
+/* ---------- Kontakt ---------- */
+.info-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.info-list li { display: flex; gap: 12px; align-items: flex-start; }
+.info-list .ico {
+  flex: none; width: 38px; height: 38px; border-radius: 12px;
+  background: var(--accent-soft); color: var(--accent-dark); display: grid; place-items: center;
+}
+.info-list .ico svg { width: 20px; height: 20px; }
+.info-list small { display: block; color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; }
+.info-list a { text-decoration: none; font-weight: 600; }
+.hours { width: 100%; font-size: .95rem; }
+.hours td { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.hours td:last-child { text-align: right; font-weight: 600; }
+.hours tr:last-child td { border-bottom: none; }
+
+form label { display: block; font-weight: 600; font-size: .9rem; margin: 0 0 6px; }
+form input, form textarea {
+  width: 100%; padding: 13px 14px; margin-bottom: 14px; font-size: 1rem;
+  border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--text);
+  font-family: inherit;
+}
+form input:focus, form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.map { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+.map iframe { width: 100%; height: 260px; border: 0; display: block; }
+
+/* ---------- Stopka ---------- */
+footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 10px 16px 24px; }
+
+/* ---------- Dolny pasek nawigacji (jak w aplikacji) ---------- */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  height: calc(var(--tabbar-h) + var(--safe-b));
+  padding-bottom: var(--safe-b);
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.tabbar a {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  text-decoration: none; color: var(--muted); font-size: .7rem; font-weight: 600;
+}
+.tabbar a svg { width: 24px; height: 24px; }
+.tabbar a.active { color: var(--accent-dark); }
+.tabbar a.active svg { stroke: var(--accent-dark); }
+
+/* ---------- Większe ekrany ---------- */
+@media (min-width: 720px) {
+  .container { max-width: 860px; }
+  .tiles { grid-template-columns: repeat(4, 1fr); }
+  .btn-row { grid-template-columns: 1fr 1fr; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+}

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>*{margin:0;padding:0}body{background:#000;overflow:hidden;cursor:none}canvas{position:fixed;top:0;left:0}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+// ══════════════════════════════════════════════════════════════
+// LUMINOUS FLOW — Dual 600-Cell Compound with Particle Rivers
+// Maximum information density hypnotic trance engine
+// ══════════════════════════════════════════════════════════════
+
+const c=document.getElementById('c'),g=c.getContext('2d');
+let W,H;
+const dpr=Math.min(devicePixelRatio,2);
+function resize(){W=c.width=innerWidth*dpr;H=c.height=innerHeight*dpr;c.style.width=innerWidth+'px';c.style.height=innerHeight+'px'}
+resize();addEventListener('resize',resize);
+
+const φ=(1+Math.sqrt(5))/2,ψ=1/φ,√5=Math.sqrt(5);
+
+// ── Generate 600-cell ──
+function gen600(){
+  const v=[];
+  for(let i=0;i<4;i++)for(const s of[-1,1]){const q=[0,0,0,0];q[i]=2*s;v.push(q)}
+  for(let a=-1;a<=1;a+=2)for(let b=-1;b<=1;b+=2)for(let c=-1;c<=1;c+=2)for(let d=-1;d<=1;d+=2)v.push([a,b,c,d]);
+  const base=[φ,1,ψ,0];
+  for(const p of evenP(base))for(const s of signs(p))v.push(s);
+  return dedup(v);
+}
+function evenP(a){const r=[],ix=[[0,1,2,3],[0,2,3,1],[0,3,1,2],[1,0,3,2],[1,2,0,3],[1,3,2,0],[2,0,1,3],[2,1,3,0],[2,3,0,1],[3,0,2,1],[3,1,0,2],[3,2,1,0]];for(const i of ix)r.push([a[i[0]],a[i[1]],a[i[2]],a[i[3]]]);return r}
+function signs(a){const r=[],nz=[];for(let i=0;i<4;i++)if(a[i]!==0)nz.push(i);for(let m=0;m<(1<<nz.length);m++){const v=a.slice();for(let j=0;j<nz.length;j++)if(m&(1<<j))v[nz[j]]=-v[nz[j]];r.push(v)}return r}
+function dedup(v){const u=[];o:for(const a of v){for(const b of u){let d=0;for(let i=0;i<4;i++)d+=(a[i]-b[i])**2;if(d<1e-4)continue o}u.push(a)}return u}
+
+// ── Build geometry ──
+let V=gen600();
+const norm=Math.max(...V.map(v=>Math.sqrt(v.reduce((s,x)=>s+x*x,0))));
+V=V.map(v=>v.map(x=>x/norm));
+
+// Edges
+const edges=[];
+const eL2=(2*ψ/norm)**2;
+for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++){
+  let d=0;for(let k=0;k<4;k++)d+=(V[i][k]-V[j][k])**2;
+  if(Math.abs(d-eL2)<.012)edges.push([i,j]);
+}
+
+// Second-neighbor edges (longer connections for extra density)
+const edges2=[];
+const eL2b=eL2*2.62; // ~next shell distance
+for(let i=0;i<V.length;i++)for(let j=i+1;j<V.length;j++){
+  let d=0;for(let k=0;k<4;k++)d+=(V[i][k]-V[j][k])**2;
+  if(Math.abs(d-eL2b)<.06)edges2.push([i,j]);
+}
+
+// ── 24-cell for inner core ──
+function gen24(){
+  const v=[];
+  for(let i=0;i<4;i++)for(const s of[-1,1]){const q=[0,0,0,0];q[i]=s;v.push(q)}
+  for(let a=-1;a<=1;a+=2)for(let b=-1;b<=1;b+=2)for(let c=-1;c<=1;c+=2)for(let d=-1;d<=1;d+=2)v.push([a*.5,b*.5,c*.5,d*.5]);
+  return v;
+}
+const V24=gen24();
+const E24=[];
+for(let i=0;i<V24.length;i++)for(let j=i+1;j<V24.length;j++){
+  let d=0;for(let k=0;k<4;k++)d+=(V24[i][k]-V24[j][k])**2;
+  if(Math.abs(d-1)<.05)E24.push([i,j]);
+}
+
+// ── Particles: flowing along edges ──
+const NUM_PARTICLES=1800;
+const particles=[];
+const allEdgeSets=[
+  {edges,scale:1.0,speedMul:1.0,off:[0,0,0,0,0,0]},
+  {edges,scale:ψ,speedMul:φ,off:[Math.PI/5,Math.PI/7,Math.PI/11,Math.PI/13,Math.PI/17,Math.PI/19]},
+  {edges:edges2,scale:1.0,speedMul:1.0,off:[0,0,0,0,0,0]}, // second-neighbor on outer
+];
+
+for(let i=0;i<NUM_PARTICLES;i++){
+  const setIdx=i<800?0:i<1300?1:2;
+  const eSet=allEdgeSets[setIdx];
+  const eIdx=Math.floor(Math.random()*eSet.edges.length);
+  particles.push({
+    setIdx,
+    edgeIdx:eIdx,
+    t:Math.random(), // position along edge 0..1
+    speed:(0.001+Math.random()*0.004)*(Math.random()<.5?1:-1),
+    size:0.3+Math.random()*1.2,
+    brightness:0.3+Math.random()*0.7,
+    hueShift:Math.random()*0.15-0.075 // subtle individual color variation
+  });
+}
+
+// ── Mouse ──
+let mx=0,my=0,smx=0,smy=0;
+addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5)*2;my=(e.clientY/innerHeight-.5)*2});
+addEventListener('touchmove',e=>{const t=e.touches[0];mx=(t.clientX/innerWidth-.5)*2;my=(t.clientY/innerHeight-.5)*2},{passive:true});
+
+// ── Math helpers ──
+function rot4(v,a){
+  let[x,y,z,w]=v,c,s,n;
+  c=Math.cos(a[0]);s=Math.sin(a[0]);n=c*x-s*w;w=s*x+c*w;x=n;
+  c=Math.cos(a[1]);s=Math.sin(a[1]);n=c*y-s*z;z=s*y+c*z;y=n;
+  c=Math.cos(a[2]);s=Math.sin(a[2]);n=c*x-s*y;y=s*x+c*y;x=n;
+  c=Math.cos(a[3]);s=Math.sin(a[3]);n=c*z-s*w;w=s*z+c*w;z=n;
+  c=Math.cos(a[4]);s=Math.sin(a[4]);n=c*x-s*z;z=s*x+c*z;x=n;
+  c=Math.cos(a[5]);s=Math.sin(a[5]);n=c*y-s*w;w=s*y+c*w;y=n;
+  return[x,y,z,w];
+}
+function stereo(v,d=3.2){const s=d/(d-v[3]);return[v[0]*s,v[1]*s,v[2]*s,s]}
+function rot3(v,ax,ay){
+  let[x,y,z]=v,c,s,n;
+  c=Math.cos(ay);s=Math.sin(ay);n=c*x+s*z;z=-s*x+c*z;x=n;
+  c=Math.cos(ax);s=Math.sin(ax);n=c*y-s*z;z=s*y+c*z;y=n;
+  return[x,y,z];
+}
+function proj(v){const f=4.5,s=f/(f+v[2]),sz=Math.min(W,H)*.33;return[W/2+v[0]*sz*s,H/2+v[1]*sz*s,s,v[2]]}
+
+// Precompute projected vertices per frame
+let projCache=[];
+
+let t=0;
+
+function computeProjections(baseVerts,scale,angles,rx,ry){
+  const pts=[];
+  for(const v of baseVerts){
+    const sc=[v[0]*scale,v[1]*scale,v[2]*scale,v[3]*scale];
+    const r4=rot4(sc,angles);
+    const[x3,y3,z3,ws]=stereo(r4);
+    const r3=rot3([x3,y3,z3],rx,ry);
+    const[sx,sy,ssc,dp]=proj(r3);
+    pts.push({x:sx,y:sy,sc:ssc,dp,w4:r4[3],ws});
+  }
+  return pts;
+}
+
+function draw(){
+  t+=0.0008;
+  smx+=(mx-smx)*.012;
+  smy+=(my-smy)*.012;
+
+  // ── Ultra-slow fade for long phosphor trails ──
+  g.fillStyle='rgba(0,0,0,0.022)';
+  g.fillRect(0,0,W,H);
+
+  const rx=smy*Math.PI*.18;
+  const ry=smx*Math.PI*.28;
+
+  // Breathing — multiple frequencies for organic feel
+  const b1=Math.sin(t*2.9)*.2+Math.sin(t*1.3)*.15+1;
+  const b2=Math.cos(t*2.1)*.18+Math.cos(t*0.7)*.12+1;
+  const b3=Math.sin(t*3.7)*.12+1;
+
+  // Base 6-plane rotation
+  const baseA=[t*.37*b1,t*.23*b2,t*.13*b3,t*.47*b1,t*.09*b2,t*.31*b3];
+
+  // ── Wave pulse ── radiates from center periodically
+  const waveCycle=t*1.8;
+  const wavePhase=(waveCycle%1);
+  const waveRadius=wavePhase*2.5;
+  const waveIntensity=Math.sin(wavePhase*Math.PI)*0.6;
+
+  // ── Compute projections for each layer ──
+  const layerPts=[];
+  for(const set of allEdgeSets){
+    const angles=baseA.map((a,i)=>a*set.speedMul+set.off[i]);
+    layerPts.push(computeProjections(V,set.scale,angles,rx,ry));
+  }
+
+  // 24-cell core
+  const coreAngles=baseA.map((a,i)=>a*φ*φ*φ+Math.PI/(i+2.5));
+  const coreScale=ψ*ψ*ψ*.7;
+  const corePts=computeProjections(V24,coreScale,coreAngles,rx,ry);
+
+  // ── Draw structural edges (very faint) ──
+  g.lineCap='round';
+
+  // Layer 0: outer 600-cell edges
+  for(const[i,j]of edges){
+    const p1=layerPts[0][i],p2=layerPts[0][j];
+    const avgW=(p1.w4+p2.w4)/2;
+    const avgD=(p1.dp+p2.dp)/2;
+    const dA=Math.max(.005,.06+avgD*.03);
+    const wA=Math.max(.02,1-Math.abs(avgW)*.6);
+    const dist4d=Math.sqrt(p1.x*p1.x+p1.y*p1.y)/(Math.min(W,H)*.5);
+    const waveBoost=Math.max(0,waveIntensity*(1-Math.abs(dist4d-waveRadius)*5));
+    let alpha=dA*wA*.18+waveBoost*.15;
+    if(alpha<.003)continue;
+    const lw=Math.max(.1,Math.min(1.5,(p1.ws+p2.ws)*.2))*dpr*.5;
+    g.beginPath();g.moveTo(p1.x,p1.y);g.lineTo(p2.x,p2.y);
+    // Subtle hue: encode 4D depth as warmth
+    const hue=200+avgW*40;
+    const sat=Math.min(12,Math.abs(avgW)*20);
+    g.strokeStyle=`hsla(${hue},${sat}%,${75+avgD*5}%,${alpha})`;
+    g.lineWidth=lw;g.stroke();
+  }
+
+  // Layer 1: inner 600-cell (fainter)
+  for(const[i,j]of edges){
+    const p1=layerPts[1][i],p2=layerPts[1][j];
+    const avgW=(p1.w4+p2.w4)/2;
+    const avgD=(p1.dp+p2.dp)/2;
+    let alpha=Math.max(.003,.04+avgD*.02)*(1-Math.abs(avgW)*.5)*.25;
+    if(alpha<.003)continue;
+    const lw=Math.max(.1,Math.min(1.2,(p1.ws+p2.ws)*.18))*dpr*.5;
+    const hue=30+avgW*30;
+    const sat=Math.min(15,Math.abs(avgW)*18);
+    g.beginPath();g.moveTo(p1.x,p1.y);g.lineTo(p2.x,p2.y);
+    g.strokeStyle=`hsla(${hue},${sat}%,${70+avgD*5}%,${alpha})`;
+    g.lineWidth=lw;g.stroke();
+  }
+
+  // Second-neighbor edges (ghostly)
+  for(const[i,j]of edges2){
+    const p1=layerPts[2][i],p2=layerPts[2][j];
+    const avgW=(p1.w4+p2.w4)/2;
+    let alpha=Math.max(.001,.02)*(1-Math.abs(avgW)*.5)*.12;
+    if(alpha<.002)continue;
+    g.beginPath();g.moveTo(p1.x,p1.y);g.lineTo(p2.x,p2.y);
+    g.strokeStyle=`hsla(270,8%,70%,${alpha})`;
+    g.lineWidth=.3*dpr;g.stroke();
+  }
+
+  // 24-cell core
+  for(const[i,j]of E24){
+    const p1=corePts[i],p2=corePts[j];
+    const avgW=(p1.w4+p2.w4)/2;
+    let alpha=.15*(1-Math.abs(avgW)*.4);
+    const lw=Math.max(.2,Math.min(2,(p1.ws+p2.ws)*.3))*dpr*.5;
+    g.beginPath();g.moveTo(p1.x,p1.y);g.lineTo(p2.x,p2.y);
+    g.strokeStyle=`hsla(40,15%,85%,${alpha})`;
+    g.lineWidth=lw;g.stroke();
+  }
+
+  // ── Flowing particles ──
+  for(const p of particles){
+    // Advance position
+    const speedMod=b1*(.7+Math.sin(t*5+p.edgeIdx)*.3);
+    p.t+=p.speed*speedMod;
+    // Bounce or wrap at edge endpoints
+    if(p.t>1){p.t=1;p.speed=-Math.abs(p.speed)}
+    if(p.t<0){p.t=0;p.speed=Math.abs(p.speed)}
+    // Occasionally jump to adjacent edge
+    if(Math.random()<.003){
+      const set=allEdgeSets[p.setIdx];
+      const e=set.edges[p.edgeIdx];
+      const endVert=p.t>.5?e[1]:e[0];
+      // Find another edge sharing this vertex
+      const candidates=[];
+      for(let k=0;k<set.edges.length;k++){
+        if(k===p.edgeIdx)continue;
+        if(set.edges[k][0]===endVert||set.edges[k][1]===endVert)candidates.push(k);
+      }
+      if(candidates.length>0){
+        const newEdge=candidates[Math.floor(Math.random()*candidates.length)];
+        p.edgeIdx=newEdge;
+        const ne=set.edges[newEdge];
+        p.t=ne[0]===endVert?0:1;
+      }
+    }
+
+    const set=allEdgeSets[p.setIdx];
+    const e=set.edges[p.edgeIdx];
+    const pts=layerPts[p.setIdx];
+    if(!pts[e[0]]||!pts[e[1]])continue;
+    const p1=pts[e[0]],p2=pts[e[1]];
+
+    // Interpolate position
+    const px=p1.x+(p2.x-p1.x)*p.t;
+    const py=p1.y+(p2.y-p1.y)*p.t;
+    const pw=(p1.w4+(p2.w4-p1.w4)*p.t);
+    const psc=(p1.sc+(p2.sc-p1.sc)*p.t);
+    const pdp=(p1.dp+(p2.dp-p1.dp)*p.t);
+
+    // Wave interaction
+    const distFromCenter=Math.sqrt((px-W/2)**2+(py-H/2)**2)/(Math.min(W,H)*.5);
+    const waveBoost=Math.max(0,waveIntensity*(1-Math.abs(distFromCenter-waveRadius)*4));
+
+    const wA=Math.max(.05,1-Math.abs(pw)*.5);
+    const dA=Math.max(.05,.2+pdp*.06);
+    let alpha=(wA*dA*p.brightness*.4+waveBoost*.5);
+    if(alpha<.01)continue;
+
+    const sz=p.size*psc*.7*dpr;
+    const hue=210+pw*50+p.hueShift*360;
+    const sat=Math.min(20,5+Math.abs(pw)*15+waveBoost*30);
+    const light=Math.min(95,75+waveBoost*20);
+
+    // Outer glow
+    g.beginPath();
+    g.arc(px,py,sz*3,0,Math.PI*2);
+    g.fillStyle=`hsla(${hue},${sat}%,${light}%,${alpha*.06})`;
+    g.fill();
+
+    // Core
+    g.beginPath();
+    g.arc(px,py,sz*.8,0,Math.PI*2);
+    g.fillStyle=`hsla(${hue},${sat*0.5}%,${Math.min(98,light+10)}%,${alpha*.7})`;
+    g.fill();
+  }
+
+  // ── Vertex glow for brightest vertices ──
+  for(const pts of[layerPts[0],corePts]){
+    const isCoreSet=(pts===corePts);
+    for(const p of pts){
+      const wA=Math.max(.02,1-Math.abs(p.w4)*.5);
+      const dA=Math.max(.02,.15+p.dp*.06);
+      const distFromCenter=Math.sqrt((p.x-W/2)**2+(p.y-H/2)**2)/(Math.min(W,H)*.5);
+      const waveBoost=Math.max(0,waveIntensity*(1-Math.abs(distFromCenter-waveRadius)*4));
+      let a=wA*dA*(isCoreSet?1.2:.35)+waveBoost*.4;
+      if(a<.04)continue;
+      const r=Math.max(.3,Math.min(2.5,p.ws*.7))*dpr*.5;
+      // Bloom
+      g.beginPath();g.arc(p.x,p.y,r*6,0,Math.PI*2);
+      g.fillStyle=`hsla(${210+p.w4*40},10%,80%,${a*.02})`;g.fill();
+      // Glow
+      g.beginPath();g.arc(p.x,p.y,r*2.5,0,Math.PI*2);
+      g.fillStyle=`hsla(${210+p.w4*40},8%,85%,${a*.08})`;g.fill();
+      // Core
+      g.beginPath();g.arc(p.x,p.y,r*.5,0,Math.PI*2);
+      g.fillStyle=`hsla(0,0%,100%,${a*.5})`;g.fill();
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+// Precompute adjacency for particle navigation (optimization)
+for(const set of allEdgeSets){
+  set.adj={};
+  for(let k=0;k<set.edges.length;k++){
+    const[a,b]=set.edges[k];
+    if(!set.adj[a])set.adj[a]=[];
+    if(!set.adj[b])set.adj[b]=[];
+    set.adj[a].push(k);
+    set.adj[b].push(k);
+  }
+}
+
+// Optimize particle edge-jumping using adjacency
+for(const p of particles){
+  const origJump=0.003;
+  // Particles will use adjacency lists at runtime
+}
+
+g.fillStyle='#000';g.fillRect(0,0,W,H);
+draw();
+</script>
+</body>
+</html>

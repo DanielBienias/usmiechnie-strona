@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontakt - [Nazwa Kliniki]</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">[Nazwa Kliniki]</a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">O placówce</a></li>
+                    <li><a href="zespol.html">Zespół</a></li>
+                    <li><a href="cennik.html">Cennik</a></li>
+                    <li><a href="kontakt.html" class="active">Kontakt</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="content-section">
+            <h2>Kontakt i lokalizacja</h2>
+            <div class="contact-container">
+
+                <div class="contact-column">
+                    <h3>Skontaktuj się z nami</h3>
+                    <p><strong>[Nazwa Kliniki]</strong></p>
+                    <p>
+                        ul. Przykładowa 123<br>
+                        00-001 Warszawa
+                    </p>
+                    <p>
+                        <strong>Telefon:</strong><br>
+                        +48 123 456 789
+                    </p>
+                    <p>
+                        <strong>Adres e-mail:</strong><br>
+                        kontakt@twojadomena.pl
+                    </p>
+                    <p>
+                        <strong>Godziny otwarcia:</strong><br>
+                        Poniedziałek - Piątek: 8:00 - 20:00<br>
+                        Sobota: 9:00 - 15:00
+                    </p>
+                </div>
+
+                <div class="contact-column">
+                    <h3>Napisz do nas</h3>
+                    <p>Masz pytania? Wypełnij formularz.</p>
+                    
+                    <form action="https://formspree.io/f/TWOJ_UNIKALNY_ID_FORMULARZA" method="POST">
+                        <label for="name">Imię i nazwisko:</label>
+                        <input type="text" id="name" name="name" required>
+                        
+                        <label for="email">Twój e-mail:</label>
+                        <input type="email" id="email" name="email" required>
+                        
+                        <label for="message">Wiadomość:</label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+                        
+                        <button type="submit">Wyślij wiadomość</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="map-container">
+                <h3>Jak do nas trafić?</h3>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19971.350299172213!2d16.668149474316404!3d51.2666099!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x470f9b9f8d624a05%3A0xf9496fd7f3d314a5!2sU%C5%9Bmiechnie%20Stomatologia%20Katarzyna%20Baziuk!5e0!3m2!1spl!2spl!4v1760843697440!5m2!1spl!2spl" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 [Nazwa Kliniki]. Wszelkie prawa zastrzeżone.</p>
+    </footer>
+
+</body>
+</html>

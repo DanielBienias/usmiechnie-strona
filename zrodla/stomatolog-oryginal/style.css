@@ -1,0 +1,214 @@
+/* --- Podstawowe Style --- */
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f3eF; /* Jasny beżowy kolor tła */
+    color: #444;
+    line-height: 1.6;
+}
+
+/* --- Główny kontener strony --- */
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* --- Nagłówek i Nawigacja --- */
+header {
+    background-color: #ffffff;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #a28a6a; /* Akcent kolorystyczny */
+    text-decoration: none;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+}
+
+nav li {
+    margin-left: 35px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 5px 0;
+    transition: color 0.3s;
+}
+
+nav a:hover,
+nav a.active { /* Styl dla aktywnej (obecnej) strony */
+    color: #a28a6a;
+}
+
+/* --- Zawartość sekcji --- */
+.content-section {
+    background-color: #ffffff;
+    margin-bottom: 30px;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+h2 {
+    color: #a28a6a;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+h3 {
+    color: #444;
+    margin-top: 30px;
+}
+
+/* --- Styl Cennika --- */
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.price-table th, .price-table td {
+    padding: 14px 10px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+.price-table tr:last-child td {
+    border-bottom: none;
+}
+
+.price-table td:first-child {
+    width: 70%;
+}
+
+.price-table td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+}
+
+/* --- Styl Formularza i Mapy --- */
+.contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.contact-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.map-container {
+    margin-top: 30px;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 400px;
+    border: 0;
+    border-radius: 8px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+form input, form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #a28a6a;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #897255;
+}
+
+
+/* --- Style dla Przycisków CTA (Call to Action) --- */
+.text-center {
+    text-align: center;
+}
+
+.cta-button-container {
+    display: flex;
+    flex-wrap: wrap; /* Pozwala przyciskom przenieść się niżej na mniejszych ekranach */
+    justify-content: center; /* Wyśrodkowuje przyciski */
+    gap: 20px; /* Odstęp między przyciskami */
+    margin-top: 30px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #a28a6a; /* Główny kolor akcentu */
+    color: #ffffff;
+    padding: 20px 35px;
+    font-size: 1.2em;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    flex-grow: 1; /* Opcjonalnie: sprawia, że przyciski rosną równomiernie */
+    min-width: 200px; /* Minimalna szerokość przycisku */
+}
+
+.cta-button:hover {
+    background-color: #897255; /* Ciemniejszy odcień przy najechaniu */
+    transform: translateY(-2px); /* Lekkie uniesienie przycisku */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- Stopka --- */
+footer {
+    text-align: center;
+    padding: 30px;
+    margin-top: 30px;
+    background-color: #e9e5e0;
+    color: #777;
+    font-size: 0.9em;
+}

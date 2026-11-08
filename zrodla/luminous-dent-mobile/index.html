@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Uśmiechnij Się - Gabinet Stomatologiczny Katarzyna Baziuk</title>
+    <meta name="description" content="Nowoczesny gabinet stomatologiczny Katarzyna Baziuk. Bezbolesne leczenie, mikroskop zabiegowy, komfortowe fotele i indywidualne podejście." />
+    <meta property="og:title" content="Uśmiechnij Się - Gabinet Stomatologiczny Katarzyna Baziuk" />
+    <meta property="og:description" content="Nowoczesny gabinet stomatologiczny Katarzyna Baziuk. Bezbolesne leczenie, mikroskop zabiegowy, komfortowe fotele i indywidualne podejście." />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clinic: {
+                bg: '#eeeeee', // User specified "logo color" - using as background
+                primary: '#bbae9e', // User specified "bar color"
+                primaryDark: '#a69b8e', // Slightly darker for interaction
+                text: '#322f2b', // User specified "under logo color"
+                subtext: '#5e5952', // Derived from text
+                sand: '#e6e2de', // Light accent blending bg and primary
+                white: '#FFFFFF'
+              }
+            },
+            fontFamily: {
+              sans: ['"Lato"', 'Arial', 'sans-serif'],
+              serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #eeeeee;
+        color: #322f2b;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Playfair Display', serif;
+      }
+      /* Hide scrollbar for cleaner mobile look in modals */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
